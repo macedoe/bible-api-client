@@ -1,0 +1,26 @@
+{
+    "semi": true,
+    "trailingComma": "none",
+    "singleQuote": true,
+    "printWidth": 150,
+    "tabWidth": 4,
+    "endOfLine": "auto",
+    "bracketSpacing": true,
+    "useTabs": false,
+    "htmlWhitespaceSensitivity": "css",
+    "arrowParens": "avoid",
+    "overrides": [
+      {
+        "files": "*.scss",
+        "options": {
+          "singleQuote": false
+        }
+      },  {
+        "files": "*.html",
+        "options": {
+          "printWidth": 150,
+          "parser": "angular"
+        }
+      }
+    ]
+  }

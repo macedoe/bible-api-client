@@ -1,0 +1,33 @@
+.footer {
+    position: fixed;
+    bottom: 0px;
+    overflow: hide;
+    width: 100%;
+    height: 50px;
+}
+
+.footer .mat-toolbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    height: 100%;
+}
+
+.footer button {
+    flex: 1 1 auto;
+}
+
+.toolbar-icon {
+    line-height: 0; // Set to zero or will affect spacing between icon and text
+}
+
+.toolbar-icon-text {
+    line-height: 1.8; // Proper spacing between icon and text
+    font-size: 70%; // Smaller text size for proper display under icon
+}
+
+.active-menu-item {
+    color: black;
+}

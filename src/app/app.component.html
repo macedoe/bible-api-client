@@ -1,1 +1,17 @@
-<router-outlet></router-outlet>
+<mat-sidenav-container fullscreen>
+    <mat-sidenav #sidenav role="navigation" mode="push">
+        <app-sidenav (sideNavClosed)="sidenav.close()"></app-sidenav>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+        <div class="header">
+            <app-top-bar [title]="title"></app-top-bar>
+        </div>
+
+        <main class="container mat-app-background">
+            <router-outlet></router-outlet>
+        </main>
+
+        <app-footer (sidenavToggle)="sidenav.toggle()"></app-footer>
+    </mat-sidenav-content>
+</mat-sidenav-container>

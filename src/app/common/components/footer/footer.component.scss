@@ -3,7 +3,8 @@
     bottom: 0px;
     overflow: hide;
     width: 100%;
-    height: 50px;
+    height: 56px;
+    border-top: .5px solid #eee;
 }
 
 .footer .mat-toolbar {
@@ -11,12 +12,20 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 0;
+    padding: 0 5px;
     height: 100%;
+    background-color: #dedede;
 }
 
 .footer button {
     flex: 1 1 auto;
+    background-color: transparent;
+    border: none;
+    width: 100px;
+}
+
+.footer button:hover {
+    background-color: #f1f1f1;
 }
 
 .toolbar-icon {
@@ -29,5 +38,5 @@
 }
 
 .active-menu-item {
-    color: black;
+    background-color: #c5cae9 !important;
 }

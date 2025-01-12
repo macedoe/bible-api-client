@@ -9,6 +9,7 @@
         <mat-label>Search Bible Verses</mat-label>
         <mat-icon matPrefix>search</mat-icon>
         <input matInput formControlName="searchInput" />
+        <mat-icon matSuffix *ngIf="searchForm.get('searchInput')?.value" (click)="clearSearch()">close</mat-icon>
     </mat-form-field>
 
     <button mat-raised-button color="primary" type="submit">Search</button>
@@ -17,9 +18,9 @@
         <div class="search-results">
             <h2>Search Results</h2>
             <h3>{{ chapter.reference }}</h3>
-            <div class="search-results-list">
+            <mat-list class="search-results-list">
                 <span [innerHtml]="resultVerse"></span>
-            </div>
+            </mat-list>
         </div>
     }
 </form>

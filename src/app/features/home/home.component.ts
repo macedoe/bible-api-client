@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -8,7 +9,7 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-home',
-    imports: [FormsModule, ReactiveFormsModule, MaterialModule],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss'
 })
@@ -27,6 +28,10 @@ export class HomeComponent {
         });
     }
 
+    public clearSearch() {
+        this.searchForm.reset();
+    }
+
     public async search() {
         this.chapter = null;
         const searchInput = this.searchForm.get('searchInput')?.value;
@@ -39,6 +44,9 @@ export class HomeComponent {
 
         let verses = '';
         for (let verse of chapterData.verses) {
+            if (verses.length > 0) {
+                verses += '<br /><br />';
+            }
             verses += `<sup><b>${verse.verse}</b></sup> ${verse.text} `;
         }
 

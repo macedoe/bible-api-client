@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BibleChapter } from '../interfaces';
+import { BibleChapter, BibleTranslation } from '../interfaces';
 import { ConfigService } from './config.service';
 
 @Injectable({
@@ -14,6 +14,10 @@ export class BibleApiService {
         configService: ConfigService
     ) {
         this.baseUrl = configService.config.api.baseUrl;
+    }
+
+    getTranslations() {
+        return this.get<{ translations: BibleTranslation[] }>('data');
     }
 
     getVerseRange(book: string, chapter: number, startVerse: number, endVerse: number) {

@@ -6,12 +6,23 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 @NgModule({
     declarations: [],
     imports: [CommonModule],
-    exports: [MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatListModule, MatMenuModule, MatSidenavModule, MatToolbarModule]
+    exports: [
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        MatListModule,
+        MatMenuModule,
+        MatSelectModule,
+        MatSidenavModule,
+        MatToolbarModule
+    ]
 })
 export class MaterialModule {}

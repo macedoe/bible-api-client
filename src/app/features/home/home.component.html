@@ -4,22 +4,31 @@
     <p>Ex: John 3:16</p>
 </div>
 
-<form class="search-form" [formGroup]="searchForm" (ngSubmit)="search()">
+<form class="search-form" [formGroup]="homeService.searchForm" (ngSubmit)="homeService.search()">
     <mat-form-field>
         <mat-label>Search Bible Verses</mat-label>
         <mat-icon matPrefix>search</mat-icon>
         <input matInput formControlName="searchInput" />
-        <mat-icon matSuffix *ngIf="searchForm.get('searchInput')?.value" (click)="clearSearch()">close</mat-icon>
+        <mat-icon matSuffix *ngIf="homeService.searchForm.get('searchInput')?.value" (click)="homeService.clearSearch()">close</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Select Translation</mat-label>
+        <mat-select formControlName="translation">
+            <mat-option *ngFor="let translation of homeService.bibleTranslations" [value]="translation.identifier">
+                {{ translation.name }}
+            </mat-option>
+        </mat-select>
     </mat-form-field>
 
     <button mat-raised-button color="primary" type="submit">Search</button>
 
-    @if (chapter) {
+    @if (homeService.chapter) {
         <div class="search-results">
             <h2>Search Results</h2>
-            <h3>{{ chapter.reference }}</h3>
+            <h3>{{ homeService.chapter.reference }}</h3>
             <mat-list class="search-results-list">
-                <span [innerHtml]="resultVerse"></span>
+                <span [innerHtml]="homeService.resultVerse"></span>
             </mat-list>
         </div>
     }

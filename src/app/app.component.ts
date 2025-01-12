@@ -10,5 +10,5 @@ import { MaterialModule } from './material.module';
     styleUrl: './app.component.scss'
 })
 export class AppComponent {
-    title = 'test application';
+    title = 'simple bible search';
 }

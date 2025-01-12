@@ -9,12 +9,16 @@ mat-sidenav {
 }
 
 .header {
-    margin-bottom: 8px;
+    width: 100%;
+    position: fixed; // Keeps header at top of page
+    z-index: 1; // Keeps header on top of other content
 }
 
 // Component content area
 .container {
+    top: 30px;
+    height: calc(100vh - 130px);
+    position: relative;
     overflow: auto; // Keeps header from scrolling away
-    padding: 10px; // Component conent padding around edges
-    margin-bottom: 50px; // Matches height of footer so can see all content when scrolling to bottom
+    padding: 20px; // Component conent padding around edges
 }

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HomeService } from '../../common/services/home.service';
+import { HomeService } from '../../common/services';
 import { MaterialModule } from '../../material.module';
 
 @Component({

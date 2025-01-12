@@ -1,6 +1,6 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 
-export const bibleApiInterceptorInterceptor: HttpInterceptorFn = (req, next) => {
+export const bibleApiInterceptor: HttpInterceptorFn = (req, next) => {
     if (req.url.includes('bible-api.com') && !req.url.endsWith('data')) {
         const request = req.clone({
             setHeaders: {

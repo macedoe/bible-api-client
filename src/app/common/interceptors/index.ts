@@ -1,1 +1,1 @@
-export * from './bible-api-interceptor.interceptor';
+export * from './bible-api.interceptor';

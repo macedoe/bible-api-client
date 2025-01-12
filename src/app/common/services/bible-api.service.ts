@@ -29,6 +29,6 @@ export class BibleApiService {
     }
 
     get<T>(queryString: string) {
-        return this.http.get<T>(`${this.baseUrl}${queryString}?single_chapter_book_matching=indifferent`);
+        return this.http.get<T>(`${this.baseUrl}${queryString}`);
     }
 }

@@ -32,9 +32,7 @@ export class HomeService {
     }
 
     public async getTranslations() {
-        this.bibleTranslations = (await lastValueFrom(this.bibleApiService.getTranslations())).translations.filter(
-            translation => translation.language_code === 'eng' && translation.identifier !== 'ylt'
-        );
+        this.bibleTranslations = await lastValueFrom(this.bibleApiService.getValidTranslations());
         const webTranslation = this.bibleTranslations.find(t => t.identifier === 'web');
         if (webTranslation) {
             this.searchForm.get('translation')?.setValue(webTranslation.identifier);

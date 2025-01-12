@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { map } from 'rxjs';
 import { BibleChapter, BibleTranslation } from '../interfaces';
 import { ConfigService } from './config.service';
 
@@ -14,6 +15,12 @@ export class BibleApiService {
         configService: ConfigService
     ) {
         this.baseUrl = configService.config.api.baseUrl;
+    }
+
+    getValidTranslations() {
+        return this.get<{ translations: BibleTranslation[] }>('data').pipe(
+            map(response => response.translations.filter(translation => translation.language_code === 'eng' && translation.identifier !== 'ylt'))
+        );
     }
 
     getTranslations() {

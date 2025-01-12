@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { lastValueFrom } from 'rxjs';
-import { BibleChapter, BibleTranslation } from '../interfaces';
-import { BibleApiService } from './bible-api.service';
+import { BibleChapter, BibleTranslation } from '../../../common/interfaces';
+import { BibleApiService } from '../../../common/services';
 
 @Injectable({
     providedIn: 'root'

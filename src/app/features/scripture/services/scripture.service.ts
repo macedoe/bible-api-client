@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BibleTranslation } from '../../../common/interfaces';
+import { BibleChapter, BibleTranslation, BibleVerse } from '../../../common/interfaces';
 import { BibleApiService } from '../../../common/services';
 
 @Injectable({
@@ -8,6 +8,8 @@ import { BibleApiService } from '../../../common/services';
 export class ScriptureService {
     bibleTranslations: BibleTranslation[] = [];
     selectedTranslation: BibleTranslation | null = null;
+    selectedBookChapters: BibleChapter[] | null = null;
+    selectedChapterVerses: BibleVerse[] | null = null;
 
     constructor(private bibleApiService: BibleApiService) {}
 

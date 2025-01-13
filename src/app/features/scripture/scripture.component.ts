@@ -11,8 +11,8 @@ import { ScriptureService } from './services/scripture.service';
 })
 export class ScriptureComponent implements OnInit {
     constructor(
-        private sidenavService: SidenavService,
-        private scriptureService: ScriptureService
+        public scriptureService: ScriptureService,
+        private sidenavService: SidenavService
     ) {}
 
     onToggleSidenav() {

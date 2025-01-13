@@ -50,17 +50,25 @@ export class HomeService {
         }
 
         const queryString = `${searchInput}?translation=${selectedTranslation}`;
-        const chapterData = await lastValueFrom(this.bibleApiService.get<BibleApiResponse>(queryString));
 
-        let verses = '';
-        for (let verse of chapterData.verses) {
-            if (verses.length > 0) {
-                verses += '<br /><br />';
+        try {
+            const chapterData = await lastValueFrom(this.bibleApiService.get<BibleApiResponse>(queryString));
+
+            let verses = '';
+            for (let verse of chapterData.verses) {
+                if (verses.length > 0) {
+                    verses += '<br /><br />';
+                }
+                verses += `<sup><b>${verse.verse}</b></sup> ${verse.text} `;
             }
-            verses += `<sup><b>${verse.verse}</b></sup> ${verse.text} `;
-        }
 
-        this.chapter = chapterData;
-        this.resultVerse = this.domSanitizer.bypassSecurityTrustHtml(verses);
+            this.chapter = chapterData;
+            this.resultVerse = this.domSanitizer.bypassSecurityTrustHtml(verses);
+        } catch (error) {
+            this.chapter = null;
+            this.resultVerse = null;
+
+            console.error(error);
+        }
     }
 }

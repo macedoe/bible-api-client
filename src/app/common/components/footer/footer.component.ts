@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MaterialModule } from '../../../material.module';
 
@@ -8,10 +8,4 @@ import { MaterialModule } from '../../../material.module';
     templateUrl: './footer.component.html',
     styleUrl: './footer.component.scss'
 })
-export class FooterComponent {
-    @Output() public sidenavToggle = new EventEmitter();
-
-    onToggleSidenav = () => {
-        this.sidenavToggle.emit();
-    };
-}
+export class FooterComponent {}

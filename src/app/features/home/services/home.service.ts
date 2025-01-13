@@ -23,16 +23,17 @@ export class HomeService {
             searchInput: [''],
             translation: ['', Validators.required]
         });
-
-        this.getTranslations();
     }
 
     public clearSearch() {
-        this.searchForm.reset();
+        this.searchForm.get('searchInput')?.setValue('');
     }
 
     public async getTranslations() {
-        this.bibleTranslations = await lastValueFrom(this.bibleApiService.getValidTranslations());
+        this.bibleTranslations = await this.bibleApiService.getCachedTranslations();
+    }
+
+    public setDefaultTranslationIfAny() {
         const webTranslation = this.bibleTranslations.find(t => t.identifier === 'web');
         if (webTranslation) {
             this.searchForm.get('translation')?.setValue(webTranslation.identifier);

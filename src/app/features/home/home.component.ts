@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../material.module';
 import { HomeService } from './services/home.service';
@@ -10,6 +10,13 @@ import { HomeService } from './services/home.service';
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss'
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
     constructor(public homeService: HomeService) {}
+
+    async ngOnInit() {
+        if (!this.homeService.bibleTranslations.length) {
+            await this.homeService.getTranslations();
+            this.homeService.setDefaultTranslationIfAny();
+        }
+    }
 }

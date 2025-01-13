@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BibleChapter, BibleTranslation, BibleVerse } from '../../../common/interfaces';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { BibleBook, BibleChapter, BibleTranslation, BibleVerse } from '../../../common/interfaces';
 import { BibleApiService } from '../../../common/services';
 
 @Injectable({
@@ -7,20 +8,32 @@ import { BibleApiService } from '../../../common/services';
 })
 export class ScriptureService {
     bibleTranslations: BibleTranslation[] = [];
-    selectedTranslation: BibleTranslation | null = null;
+    selectForm: FormGroup;
+    selectedBooks: BibleBook[] | null = null;
+
     selectedBookChapters: BibleChapter[] | null = null;
     selectedChapterVerses: BibleVerse[] | null = null;
 
-    constructor(private bibleApiService: BibleApiService) {}
+    constructor(
+        formBuilder: FormBuilder,
+        private bibleApiService: BibleApiService
+    ) {
+        this.selectForm = formBuilder.group({
+            translation: ['', Validators.required]
+        });
+    }
 
     public async getTranslations() {
         this.bibleTranslations = await this.bibleApiService.getCachedTranslations();
     }
 
-    public setDefaultTranslation() {
-        const webTranslation = this.bibleTranslations.find(translation => translation.identifier === 'web');
-        if (webTranslation) {
-            this.selectedTranslation = webTranslation;
+    public async onTranslationChange() {
+        const selectedTranslation = this.selectForm.get('translation')?.value as string | null;
+        if (selectedTranslation) {
+            const translation = await this.bibleApiService.getCachedTranslation(selectedTranslation);
+            this.selectedBooks = translation.books;
         }
     }
+
+    public onBookSelect(book: BibleBook) {}
 }

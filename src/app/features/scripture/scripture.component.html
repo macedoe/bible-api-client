@@ -1,6 +1,21 @@
-<div class="sidenav-button">
-    <button mat-stroked-button color="accent" (click)="onToggleSidenav()">
-        <mat-icon matSuffix>arrow_back</mat-icon>
-        Select translation & book
-    </button>
-</div>
+<form class="select-form" [formGroup]="scriptureService.selectForm" (ngSubmit)="scriptureService.onTranslationChange()">
+    <mat-form-field appearance="outline">
+        <mat-label>Select Translation</mat-label>
+        <mat-select formControlName="translation" (selectionChange)="scriptureService.onTranslationChange()">
+            @for (translation of scriptureService.bibleTranslations; track translation.identifier) {
+                <mat-option [value]="translation.identifier">
+                    {{ translation.name }}
+                </mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+</form>
+
+@if (scriptureService.selectedBooks) {
+    <div class="sidenav-button">
+        <button mat-stroked-button color="accent" (click)="onToggleSidenav()">
+            <mat-icon matSuffix>arrow_back</mat-icon>
+            Select a book & chapter
+        </button>
+    </div>
+}

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { ScriptureService } from '../../../features/scripture/services/scripture.service';
 import { MaterialModule } from '../../../material.module';
 
 @Component({
@@ -11,10 +12,13 @@ import { MaterialModule } from '../../../material.module';
 export class SidenavComponent {
     @Output() sideNavClosed = new EventEmitter();
 
-    constructor(private router: Router) {}
+    constructor(
+        public scriptureService: ScriptureService,
+        private router: Router
+    ) {}
 
     onAbout() {
         this.router.navigateByUrl('/about');
-        this.sideNavClosed.emit(); // Emit event to parent component so it can tell sidenav to close
+        this.sideNavClosed.emit();
     }
 }

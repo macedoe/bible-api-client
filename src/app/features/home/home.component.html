@@ -5,14 +5,14 @@
 </div>
 
 <form class="search-form" [formGroup]="homeService.searchForm" (ngSubmit)="homeService.search()">
-    <mat-form-field>
+    <mat-form-field appearance="outline">
         <mat-label>Search Bible Verses</mat-label>
         <mat-icon matPrefix>search</mat-icon>
         <input matInput formControlName="searchInput" />
         <mat-icon matSuffix *ngIf="homeService.searchForm.get('searchInput')?.value" (click)="homeService.clearSearch()">close</mat-icon>
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field appearance="outline">
         <mat-label>Select Translation</mat-label>
         <mat-select formControlName="translation" (selectionChange)="homeService.search()">
             <mat-option *ngFor="let translation of homeService.bibleTranslations" [value]="translation.identifier">

@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { BibleTranslationHeader } from '../../../common/interfaces';
+import { BibleTranslation } from '../../../common/interfaces';
 import { BibleApiService } from '../../../common/services';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ScriptureService {
-    bibleTranslations: BibleTranslationHeader[] = [];
-    selectedTranslation: BibleTranslationHeader | null = null;
+    bibleTranslations: BibleTranslation[] = [];
+    selectedTranslation: BibleTranslation | null = null;
 
     constructor(private bibleApiService: BibleApiService) {}
 

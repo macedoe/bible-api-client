@@ -1,4 +1,4 @@
-export interface BibleChapterHeader {
+export interface BibleChapter {
     book_id: string;
     book: string;
     chapter: number;

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { lastValueFrom } from 'rxjs';
-import { BibleApiResponse, BibleTranslationHeader } from '../../../common/interfaces';
+import { BibleApiResponse, BibleTranslation } from '../../../common/interfaces';
 import { BibleApiService } from '../../../common/services';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class HomeService {
     searchForm: FormGroup;
     chapter: BibleApiResponse | null = null;
     resultVerse: SafeHtml | null = null;
-    bibleTranslations: BibleTranslationHeader[] = [];
+    bibleTranslations: BibleTranslation[] = [];
 
     constructor(
         formBuilder: FormBuilder,

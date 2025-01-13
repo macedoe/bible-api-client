@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom, map, tap } from 'rxjs';
-import { BibleBookHeader, BibleChapterHeader, BibleTranslationHeader } from '../interfaces';
+import { BibleBook, BibleChapter, BibleTranslation, BibleVerse } from '../interfaces';
 import { ConfigService } from './config.service';
 
 @Injectable({
@@ -12,10 +12,12 @@ export class BibleApiService {
     private lastTranslationsRefresh: Date | null = null;
     private lastTranslationRefresh: Date | null = null;
     private lastBookChaptersRefresh: Date | null = null;
+    private lastChapterVersesRefresh: Date | null = null;
 
-    public bibleTranslations: BibleTranslationHeader[] = [];
-    public bibleTranslation: { translation: BibleTranslationHeader; books: BibleBookHeader[] } | null = null;
-    public bibleBookChapters: { translation: BibleTranslationHeader; chapters: BibleChapterHeader[] } | null = null;
+    public bibleTranslations: BibleTranslation[] = [];
+    public bibleTranslation: { translation: BibleTranslation; books: BibleBook[] } | null = null;
+    public bibleBookChapters: { translation: BibleTranslation; chapters: BibleChapter[] } | null = null;
+    public bibleChapterVerses: { translation: BibleTranslation; verses: BibleVerse[] } | null = null;
 
     constructor(
         private http: HttpClient,
@@ -66,15 +68,15 @@ export class BibleApiService {
         return this.bibleTranslation;
     }
 
-    public async getCachedBookChapters(translation: string, identifier: string, maxAgeMinutes = 3) {
+    public async getCachedBookChapters(translation: string, book_id: string, maxAgeMinutes = 3) {
         if (
             !this.bibleBookChapters ||
             this.bibleBookChapters.translation.identifier !== translation ||
-            this.bibleBookChapters.chapters[0].book_id !== identifier ||
+            this.bibleBookChapters.chapters[0].book_id !== book_id ||
             this.needsRefresh(maxAgeMinutes, this.lastBookChaptersRefresh)
         ) {
             this.bibleBookChapters = await lastValueFrom(
-                this.getBookChapters(translation, identifier).pipe(
+                this.getBookChapters(translation, book_id).pipe(
                     tap(response => {
                         this.bibleBookChapters = response;
                         this.lastBookChaptersRefresh = new Date();
@@ -86,16 +88,41 @@ export class BibleApiService {
         return this.bibleBookChapters;
     }
 
-    getBookChapters(translation: string, identifier: string) {
-        return this.get<{ translation: BibleTranslationHeader; chapters: BibleChapterHeader[] }>(`data/${translation}/${identifier}`);
+    public async getCachedChapterVerses(translation: string, book: string, chapter: number, maxAgeMinutes = 3) {
+        if (
+            !this.bibleChapterVerses ||
+            this.bibleChapterVerses.translation.identifier !== translation ||
+            this.bibleChapterVerses.verses[0].book_id !== book ||
+            this.bibleChapterVerses.verses[0].chapter !== chapter ||
+            this.needsRefresh(maxAgeMinutes, this.lastChapterVersesRefresh)
+        ) {
+            this.bibleChapterVerses = await lastValueFrom(
+                this.getChapterVerses(translation, book, chapter).pipe(
+                    tap(response => {
+                        this.bibleChapterVerses = response;
+                        this.lastChapterVersesRefresh = new Date();
+                    })
+                )
+            );
+        }
+
+        return this.bibleChapterVerses;
+    }
+
+    getChapterVerses(translation: string, book: string, chapter: number) {
+        return this.get<{ translation: BibleTranslation; verses: BibleVerse[] }>(`data/${translation}/${book}/${chapter}`);
+    }
+
+    getBookChapters(translation: string, book: string) {
+        return this.get<{ translation: BibleTranslation; chapters: BibleChapter[] }>(`data/${translation}/${book}`);
     }
 
     getTranslation(identifier: string) {
-        return this.get<{ translation: BibleTranslationHeader; books: BibleBookHeader[] }>(`data/${identifier}`);
+        return this.get<{ translation: BibleTranslation; books: BibleBook[] }>(`data/${identifier}`);
     }
 
     getTranslationHeaders() {
-        return this.get<{ translations: BibleTranslationHeader[] }>('data');
+        return this.get<{ translations: BibleTranslation[] }>('data');
     }
 
     get<T>(queryString: string) {

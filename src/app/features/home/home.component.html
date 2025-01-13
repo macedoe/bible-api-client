@@ -14,7 +14,7 @@
 
     <mat-form-field>
         <mat-label>Select Translation</mat-label>
-        <mat-select formControlName="translation">
+        <mat-select formControlName="translation" (selectionChange)="homeService.search()">
             <mat-option *ngFor="let translation of homeService.bibleTranslations" [value]="translation.identifier">
                 {{ translation.name }}
             </mat-option>

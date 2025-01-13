@@ -14,4 +14,11 @@ export class ScriptureService {
     public async getTranslations() {
         this.bibleTranslations = await this.bibleApiService.getCachedTranslations();
     }
+
+    public setDefaultTranslation() {
+        const webTranslation = this.bibleTranslations.find(translation => translation.identifier === 'web');
+        if (webTranslation) {
+            this.selectedTranslation = webTranslation;
+        }
+    }
 }

@@ -1,11 +1,17 @@
 import { Injectable } from '@angular/core';
-import { BibleTranslation } from '../../../common/interfaces';
+import { BibleTranslationHeader } from '../../../common/interfaces';
+import { BibleApiService } from '../../../common/services';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ScriptureService {
-    bibleTranslations: BibleTranslation[] = [];
+    bibleTranslations: BibleTranslationHeader[] = [];
+    selectedTranslation: BibleTranslationHeader | null = null;
 
-    constructor() {}
+    constructor(private bibleApiService: BibleApiService) {}
+
+    public async getTranslations() {
+        this.bibleTranslations = await this.bibleApiService.getCachedTranslations();
+    }
 }

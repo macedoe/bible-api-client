@@ -1,4 +1,4 @@
-export interface BibleVerse {
+export interface BibleApiVerse {
     book_id: string;
     book_name: string;
     chapter: number;

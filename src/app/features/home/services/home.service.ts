@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { lastValueFrom } from 'rxjs';
-import { BibleChapter, BibleTranslation } from '../../../common/interfaces';
+import { BibleApiResponse, BibleTranslationHeader } from '../../../common/interfaces';
 import { BibleApiService } from '../../../common/services';
 
 @Injectable({
@@ -10,9 +10,9 @@ import { BibleApiService } from '../../../common/services';
 })
 export class HomeService {
     searchForm: FormGroup;
-    chapter: BibleChapter | null = null;
+    chapter: BibleApiResponse | null = null;
     resultVerse: SafeHtml | null = null;
-    bibleTranslations: BibleTranslation[] = [];
+    bibleTranslations: BibleTranslationHeader[] = [];
 
     constructor(
         formBuilder: FormBuilder,
@@ -50,7 +50,7 @@ export class HomeService {
         }
 
         const queryString = `${searchInput}?translation=${selectedTranslation}`;
-        const chapterData = await lastValueFrom(this.bibleApiService.get<BibleChapter>(queryString));
+        const chapterData = await lastValueFrom(this.bibleApiService.get<BibleApiResponse>(queryString));
 
         let verses = '';
         for (let verse of chapterData.verses) {

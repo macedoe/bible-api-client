@@ -1,4 +1,4 @@
-export interface BibleTranslation {
+export interface BibleTranslationHeader {
     identifier: string;
     name: string;
     language: string;

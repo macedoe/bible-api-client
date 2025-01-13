@@ -1,8 +1,8 @@
-import { BibleVerse } from './bible-verse';
+import { BibleApiVerse } from './bible-api-verse';
 
-export interface BibleChapter {
+export interface BibleApiResponse {
     reference: string;
-    verses: BibleVerse[];
+    verses: BibleApiVerse[];
     text: string;
     translation_id: string;
     translation_name: string;

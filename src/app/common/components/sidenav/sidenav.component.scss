@@ -7,3 +7,15 @@
 :host mat-list-item button {
     width: 100%;
 }
+
+.active-book {
+    background-color: #fce8ef !important;
+}
+
+.active-chapter {
+    background-color: #dfe4fe !important;
+}
+
+.chapter-button {
+    white-space: pre;
+}

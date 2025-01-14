@@ -28,6 +28,10 @@ export class ScriptureService {
         });
     }
 
+    private get selectedTranslation(): string | null {
+        return this.selectForm.get('translation')?.value as string | null;
+    }
+
     public async getTranslations() {
         this.bibleTranslations = await this.bibleApiService.getCachedTranslations();
         const webTranslation = this.bibleTranslations.find(translation => translation.identifier === 'web');
@@ -40,13 +44,12 @@ export class ScriptureService {
     }
 
     public async onTranslationChange() {
-        const selectedTranslation = this.selectForm.get('translation')?.value as string | null;
-        if (selectedTranslation) {
-            const translation = await this.bibleApiService.getCachedTranslation(selectedTranslation);
+        if (this.selectedTranslation) {
+            const translation = await this.bibleApiService.getCachedTranslation(this.selectedTranslation);
             this.selectedBooks = translation.books;
         }
 
-        if (selectedTranslation && this.selectedChapter) {
+        if (this.selectedTranslation && this.selectedChapter) {
             await this.onChapterSelected(this.selectedChapter);
         }
     }
@@ -54,9 +57,13 @@ export class ScriptureService {
     public async onBookSelected(book: BibleBook) {
         this.selectedBook = book;
 
-        const selectedTranslation = this.selectForm.get('translation')?.value as string | null;
-        if (selectedTranslation) {
-            const chapters = await this.bibleApiService.getCachedBookChapters(selectedTranslation, book.id);
+        if (this.selectedBook.id !== this.selectedChapter?.book_id) {
+            this.selectedBookChapters = null;
+            this.selectedChapter = null;
+        }
+
+        if (this.selectedTranslation) {
+            const chapters = await this.bibleApiService.getCachedBookChapters(this.selectedTranslation, book.id);
             this.selectedBookChapters = chapters.chapters;
         }
     }

@@ -7,7 +7,8 @@
     "endOfLine": "auto",
     "bracketSpacing": true,
     "useTabs": false,
-    "htmlWhitespaceSensitivity": "css",
+    "htmlWhitespaceSensitivity": "ignore",
+    "bracketSameLine": true,
     "arrowParens": "avoid",
     "overrides": [
       {

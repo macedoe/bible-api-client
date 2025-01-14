@@ -1,10 +1,24 @@
 <mat-list>
-    <div mat-subheader><h3>Books</h3></div>
-    @for (book of scriptureService.selectedBooks; track book.id) {
-        <mat-list-item>
-            <button mat-stroked-button color="primary" (click)="scriptureService.onBookSelect(book)">
-                {{ book.name }}
+    @if (!showChapters()) {
+        <div mat-subheader><h3>Books</h3></div>
+        @for (book of scriptureService.selectedBooks; track book.id) {
+            <mat-list-item>
+                <button mat-stroked-button color="primary" (click)="onBookSelected(book)">
+                    {{ book.name }}
+                </button>
+            </mat-list-item>
+        }
+    } @else {
+        <div mat-subheader>
+             <button mat-stroked-button color="primary" (click)="showChapters.set(false)">
+                <mat-icon matPrefix>arrow_back</mat-icon>
+                {{ this.scriptureService.selectedBook?.name }}
             </button>
-        </mat-list-item>
+        </div>
+        @for (chapter of scriptureService.selectedBookChapters; track chapter.book_id) {
+            <mat-list-item>
+                <button mat-stroked-button color="accent" (click)="onChapterSelected(chapter)">Chapter {{ chapter.chapter }}</button>
+            </mat-list-item>
+        }
     }
 </mat-list>

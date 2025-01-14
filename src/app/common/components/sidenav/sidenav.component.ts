@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, EventEmitter, Output, signal } from '@angular/core';
 import { ScriptureService } from '../../../features/scripture/services/scripture.service';
 import { MaterialModule } from '../../../material.module';
+import { BibleBook, BibleChapter } from '../../interfaces';
 
 @Component({
     selector: 'app-sidenav',
@@ -11,14 +11,17 @@ import { MaterialModule } from '../../../material.module';
 })
 export class SidenavComponent {
     @Output() sideNavClosed = new EventEmitter();
+    public showChapters = signal(false);
 
-    constructor(
-        public scriptureService: ScriptureService,
-        private router: Router
-    ) {}
+    constructor(public scriptureService: ScriptureService) {}
 
-    onAbout() {
-        this.router.navigateByUrl('/about');
+    onBookSelected(book: BibleBook) {
+        this.scriptureService.onBookSelected(book);
+        this.showChapters.set(true);
+    }
+
+    onChapterSelected(chapter: BibleChapter) {
+        this.scriptureService.onChapterSelected(chapter);
         this.sideNavClosed.emit();
     }
 }

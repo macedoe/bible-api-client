@@ -2,7 +2,15 @@
     margin: 15px 0;
 }
 
+.sidenav-button button {
+    z-index: 0 !important;
+}
+
 .select-form mat-form-field {
     width: 100%;
-    margin-top: 25px;
+    margin-top: 35px;
+}
+
+.chapter-verse {
+    margin-top: 15px;
 }

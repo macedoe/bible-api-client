@@ -15,7 +15,16 @@
     <div class="sidenav-button">
         <button mat-stroked-button color="accent" (click)="onToggleSidenav()">
             <mat-icon matSuffix>arrow_back</mat-icon>
-            Select a book & chapter
+            <span>Select a book & chapter</span>
         </button>
+    </div>
+}
+
+@if (scriptureService.chapterVerseString) {
+    <div class="chapter-verse">
+        <h2>{{ scriptureService.bookChapterString }}</h2>
+        <mat-list>
+            <span [innerHtml]="scriptureService.chapterVerseString"></span>
+        </mat-list>
     </div>
 }

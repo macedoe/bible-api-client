@@ -1,5 +1,7 @@
+import { inject } from '@angular/core';
 import { ConfigService } from '../services/config.service';
 
-export function loadApiConfiguration(configService: ConfigService): Promise<void> {
+export async function loadApiConfiguration(): Promise<void> {
+    const configService = inject(ConfigService);
     return configService.loadConfig();
 }

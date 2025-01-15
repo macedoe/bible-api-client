@@ -4,12 +4,6 @@
     </mat-sidenav>
 
     <mat-sidenav-content>
-        @if (showInstallButton) {
-            <div class="install-pwa-button-container">
-                <button mat-raised-button color="primary" (click)="installPwa()">Install App</button>
-            </div>
-        }
-
         <app-top-bar class="header" [title]="title"></app-top-bar>
 
         <main class="container mat-app-background">

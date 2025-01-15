@@ -6,6 +6,10 @@
         <p>Version: 1.0.1</p>
         <p>A simple application for searching and viewing Bible verses.</p>
         <p>Uses <a href="https://bible-api.com/" target="_blank">bible-api.com</a> for the backend service.</p>
-        <!-- Add more content as needed -->
+        @if (showInstallButton) {
+            <div class="install-pwa-button-container">
+                <button mat-stroked-button color="primary" (click)="installPwa()">Add to Desktop</button>
+            </div>
+        }
     </mat-card-content>
 </mat-card>

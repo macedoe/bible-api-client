@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { RouterOutlet } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
@@ -15,9 +15,6 @@ import { MaterialModule } from './material.module';
 export class AppComponent implements OnInit {
     @ViewChild('sidenav') sidenav!: MatSidenav;
     title = 'simple bible search';
-
-    deferredPrompt: any;
-    showInstallButton = false;
 
     constructor(
         private sidenavService: SidenavService,
@@ -37,27 +34,6 @@ export class AppComponent implements OnInit {
                         window.location.reload();
                     }
                 }
-            });
-        }
-    }
-
-    @HostListener('window:beforeinstallprompt', ['$event'])
-    onBeforeInstallPrompt(event: Event) {
-        event.preventDefault();
-        this.deferredPrompt = event;
-        this.showInstallButton = true;
-    }
-
-    installPwa() {
-        if (this.deferredPrompt) {
-            this.deferredPrompt.prompt();
-            this.deferredPrompt.userConfirmed.then((choiceResult: any) => {
-                if (choiceResult.outcome === 'accepted') {
-                    console.log('User accepted the install prompt');
-                } else {
-                    console.log('User dismissed the install prompt.');
-                }
-                this.deferredPrompt = null;
             });
         }
     }

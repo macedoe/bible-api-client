@@ -55,7 +55,7 @@ export class HomeService {
             const chapterData = await lastValueFrom(this.bibleApiService.get<BibleApiResponse>(queryString));
 
             let verses = '';
-            for (let verse of chapterData.verses) {
+            for (const verse of chapterData.verses) {
                 if (verses.length > 0) {
                     verses += '<br /><br />';
                 }

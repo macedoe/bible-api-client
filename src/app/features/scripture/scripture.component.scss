@@ -14,3 +14,16 @@
 .chapter-verse {
     margin-top: 15px;
 }
+
+.chapter-buttons {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 1rem;
+    margin: 15px 0;
+}
+
+.chapter-buttons button {
+    flex: 1 1 100%;
+    justify-content: center;
+}

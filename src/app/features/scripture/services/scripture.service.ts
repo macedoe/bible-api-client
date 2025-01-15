@@ -77,7 +77,7 @@ export class ScriptureService {
             this.selectedChapterVerses = verses.verses;
 
             let chapterVerse = '';
-            for (let verse of this.selectedChapterVerses) {
+            for (const verse of this.selectedChapterVerses) {
                 if (chapterVerse.length > 0) {
                     chapterVerse += '<br /><br />';
                 }
@@ -87,5 +87,25 @@ export class ScriptureService {
             this.bookChapterString = `${this.selectedBook?.name} ${chapter.chapter}`;
             this.chapterVerseString = chapterVerse;
         }
+    }
+
+    public async onPreviousChapterSelected(chapter: BibleChapter) {
+        if (chapter.chapter <= 1) {
+            return;
+        }
+
+        let previousChapter = Object.assign({}, chapter);
+        previousChapter.chapter--;
+        await this.onChapterSelected(previousChapter);
+    }
+
+    public async onNextChapterSelected(chapter: BibleChapter) {
+        if (chapter.chapter >= this.selectedBookChapters!.length + 1) {
+            return;
+        }
+
+        let nextChapter = Object.assign({}, chapter);
+        nextChapter.chapter++;
+        await this.onChapterSelected(nextChapter);
     }
 }

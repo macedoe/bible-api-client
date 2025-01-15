@@ -23,8 +23,43 @@
 @if (scriptureService.chapterVerseString) {
     <div class="chapter-verse">
         <h2>{{ scriptureService.bookChapterString }}</h2>
+
+        <ng-container *ngTemplateOutlet="chapterNavButtons"></ng-container>
+
         <mat-list>
             <span [innerHtml]="scriptureService.chapterVerseString"></span>
         </mat-list>
     </div>
+
+    <ng-container *ngTemplateOutlet="chapterNavButtons"></ng-container>
 }
+
+<ng-template #chapterNavButtons>
+    <div class="chapter-buttons">
+        @if (scriptureService.selectedChapter && scriptureService.selectedChapter.chapter > 1) {
+            <button
+                mat-stroked-button
+                color="primary"
+                (click)="scriptureService.onPreviousChapterSelected(scriptureService.selectedChapter)"
+                tabindex="-1">
+                <mat-icon>arrow_back</mat-icon>
+                <span>Prev Chapter</span>
+            </button>
+        } 
+        
+        @if (
+            scriptureService.selectedChapter &&
+            scriptureService.selectedBookChapters &&
+            scriptureService.selectedChapter.chapter < scriptureService.selectedBookChapters.length
+        ) {
+            <button
+                mat-stroked-button
+                color="primary"
+                (click)="scriptureService.onNextChapterSelected(scriptureService.selectedChapter)"
+                tabindex="-1">
+                <mat-icon iconPositionEnd>arrow_forward</mat-icon>
+                <span>Next Chapter</span>
+            </button>
+        }
+    </div>
+</ng-template>

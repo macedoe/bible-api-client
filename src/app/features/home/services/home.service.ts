@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { lastValueFrom } from 'rxjs';
+import { HOME_CHAPTER_COOKIE, HOME_TRANSLATION_COOKIE, HOME_VERSE_COOKIE } from '../../../common/constants';
 import { BibleApiResponse, BibleTranslation } from '../../../common/interfaces';
 import { BibleApiService } from '../../../common/services';
 
@@ -34,41 +35,71 @@ export class HomeService {
     }
 
     public setDefaultTranslationIfAny() {
-        const webTranslation = this.bibleTranslations.find(t => t.identifier === 'web');
+        let webTranslation: BibleTranslation | null = null;
+
+        const translationCookie = localStorage.getItem(HOME_TRANSLATION_COOKIE);
+        if (translationCookie) {
+            webTranslation = JSON.parse(translationCookie) as BibleTranslation;
+        }
+
+        if (!webTranslation) {
+            webTranslation = this.bibleTranslations.find(translation => translation.identifier === 'web') || null;
+        }
+
         if (webTranslation) {
             this.searchForm.get('translation')?.setValue(webTranslation.identifier);
+        }
+
+        const verseCookie = localStorage.getItem(HOME_VERSE_COOKIE);
+        if (verseCookie) {
+            const searchResult = verseCookie;
+            this.searchForm.get('searchInput')?.setValue(searchResult);
+        }
+
+        const chapterCookie = localStorage.getItem(HOME_CHAPTER_COOKIE);
+        if (chapterCookie) {
+            this.setChapterAndVerses(JSON.parse(chapterCookie) as BibleApiResponse);
         }
     }
 
     public async search() {
         const searchInput = this.searchForm.get('searchInput')?.value as string | null;
-        const selectedTranslation = this.searchForm.get('translation')?.value as string | null;
+        const translationId = this.searchForm.get('translation')?.value as string | null;
+        const selectedTranslation = this.bibleTranslations.find(translation => translation.identifier === translationId);
 
-        if (!searchInput || !selectedTranslation) {
+        if (!searchInput || !translationId) {
             this.chapter = null;
             return;
         }
 
-        const queryString = `${searchInput}?translation=${selectedTranslation}`;
+        localStorage.setItem(HOME_VERSE_COOKIE, searchInput);
+        localStorage.setItem(HOME_TRANSLATION_COOKIE, JSON.stringify(selectedTranslation));
+
+        const queryString = `${searchInput}?translation=${translationId}`;
 
         try {
             const chapterData = await lastValueFrom(this.bibleApiService.get<BibleApiResponse>(queryString));
-
-            let verses = '';
-            for (const verse of chapterData.verses) {
-                if (verses.length > 0) {
-                    verses += '<br /><br />';
-                }
-                verses += `<sup><b>${verse.verse}</b></sup> ${verse.text} `;
-            }
-
-            this.chapter = chapterData;
-            this.resultVerse = this.domSanitizer.bypassSecurityTrustHtml(verses);
+            this.setChapterAndVerses(chapterData);
         } catch (error) {
             this.chapter = null;
             this.resultVerse = null;
 
             console.error(error);
         }
+    }
+
+    private setChapterAndVerses(chapterData: BibleApiResponse) {
+        let verses = '';
+        for (const verse of chapterData.verses) {
+            if (verses.length > 0) {
+                verses += '<br /><br />';
+            }
+            verses += `<sup><b>${verse.verse}</b></sup> ${verse.text} `;
+        }
+
+        this.chapter = chapterData;
+        this.resultVerse = this.domSanitizer.bypassSecurityTrustHtml(verses);
+
+        localStorage.setItem(HOME_CHAPTER_COOKIE, JSON.stringify(chapterData));
     }
 }

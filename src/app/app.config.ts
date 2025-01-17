@@ -5,7 +5,7 @@ import { provideRouter, TitleStrategy, withHashLocation } from '@angular/router'
 import { provideServiceWorker } from '@angular/service-worker';
 import { routes } from './app.routes';
 import { bibleApiInterceptor } from './common/interceptors';
-import { BibleTitleStrategy } from './common/strategies/bible-title-strategy';
+import { BibleTitleStrategy } from './common/strategies';
 import { loadApiConfiguration } from './common/utils';
 
 export const appConfig: ApplicationConfig = {

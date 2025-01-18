@@ -1,1 +1,0 @@
-export const HOME_VERSE_COOKIE = 'HOME_VERSE_COOKIE';

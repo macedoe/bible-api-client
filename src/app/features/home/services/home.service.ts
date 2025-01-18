@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { lastValueFrom } from 'rxjs';
-import { HOME_CHAPTER_COOKIE, HOME_TRANSLATION_COOKIE, HOME_VERSE_COOKIE } from '../../../common/constants';
+import { HOME_CHAPTER_STORAGE, HOME_TRANSLATION_STORAGE, HOME_VERSE_STORAGE } from '../../../common/constants';
 import { BibleApiResponse, BibleTranslation } from '../../../common/interfaces';
 import { BibleApiService } from '../../../common/services';
 
@@ -37,7 +37,7 @@ export class HomeService {
     public setDefaultTranslationIfAny() {
         let webTranslation: BibleTranslation | null = null;
 
-        const translationCookie = localStorage.getItem(HOME_TRANSLATION_COOKIE);
+        const translationCookie = localStorage.getItem(HOME_TRANSLATION_STORAGE);
         if (translationCookie) {
             webTranslation = JSON.parse(translationCookie) as BibleTranslation;
         }
@@ -50,13 +50,13 @@ export class HomeService {
             this.searchForm.get('translation')?.setValue(webTranslation.identifier);
         }
 
-        const verseCookie = localStorage.getItem(HOME_VERSE_COOKIE);
+        const verseCookie = localStorage.getItem(HOME_VERSE_STORAGE);
         if (verseCookie) {
             const searchResult = verseCookie;
             this.searchForm.get('searchInput')?.setValue(searchResult);
         }
 
-        const chapterCookie = localStorage.getItem(HOME_CHAPTER_COOKIE);
+        const chapterCookie = localStorage.getItem(HOME_CHAPTER_STORAGE);
         if (chapterCookie) {
             this.setChapterAndVerses(JSON.parse(chapterCookie) as BibleApiResponse);
         }
@@ -72,8 +72,8 @@ export class HomeService {
             return;
         }
 
-        localStorage.setItem(HOME_VERSE_COOKIE, searchInput);
-        localStorage.setItem(HOME_TRANSLATION_COOKIE, JSON.stringify(selectedTranslation));
+        localStorage.setItem(HOME_VERSE_STORAGE, searchInput);
+        localStorage.setItem(HOME_TRANSLATION_STORAGE, JSON.stringify(selectedTranslation));
 
         const queryString = `${searchInput}?translation=${translationId}`;
 
@@ -100,6 +100,6 @@ export class HomeService {
         this.chapter = chapterData;
         this.resultVerse = this.domSanitizer.bypassSecurityTrustHtml(verses);
 
-        localStorage.setItem(HOME_CHAPTER_COOKIE, JSON.stringify(chapterData));
+        localStorage.setItem(HOME_CHAPTER_STORAGE, JSON.stringify(chapterData));
     }
 }

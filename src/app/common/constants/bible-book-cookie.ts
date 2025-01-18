@@ -1,1 +1,0 @@
-export const BIBLE_BOOK_COOKIE = 'BIBLE_BOOK_COOKIE';

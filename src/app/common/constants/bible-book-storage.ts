@@ -1,0 +1,1 @@
+export const BIBLE_BOOK_STORAGE = 'BIBLE_BOOK_COOKIE';

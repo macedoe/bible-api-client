@@ -14,9 +14,6 @@ export class HomeComponent implements OnInit {
     constructor(public homeService: HomeService) {}
 
     async ngOnInit() {
-        if (!this.homeService.bibleTranslations.length) {
-            await this.homeService.getTranslations();
-            this.homeService.setDefaultTranslationIfAny();
-        }
+        await this.homeService.initialize();
     }
 }

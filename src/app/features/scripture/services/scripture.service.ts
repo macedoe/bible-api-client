@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BIBLE_BOOK_COOKIE, BIBLE_CHAPTER_COOKIE, BIBLE_TRANSLATION_COOKIE } from '../../../common/constants';
 import { BibleBook, BibleChapter, BibleTranslation, BibleVerse } from '../../../common/interfaces';
@@ -19,6 +19,8 @@ export class ScriptureService {
 
     bookChapterString: string | null = null;
     chapterVerseString: string | null = null;
+
+    public showChapters = signal(false);
 
     constructor(
         formBuilder: FormBuilder,
@@ -79,6 +81,7 @@ export class ScriptureService {
     }
 
     public async onBookSelected(book: BibleBook) {
+        this.showChapters.set(true);
         this.selectedBook = book;
 
         localStorage.setItem(BIBLE_BOOK_COOKIE, JSON.stringify(this.selectedBook));

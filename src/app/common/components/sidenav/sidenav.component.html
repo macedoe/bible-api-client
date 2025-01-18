@@ -1,5 +1,5 @@
 <mat-list>
-    @if (!showChapters()) {
+    @if (!scriptureService.showChapters()) {
         <div mat-subheader><h3>Books</h3></div>
         @for (book of scriptureService.selectedBooks; track book.id) {
             <mat-list-item>
@@ -7,7 +7,7 @@
                     mat-stroked-button
                     color="primary"
                     [class.active-book]="book.id === scriptureService.selectedBook?.id"
-                    (click)="onBookSelected(book)"
+                    (click)="scriptureService.onBookSelected(book)"
                     tabindex="-1">
                     {{ book.name }}
                 </button>
@@ -15,7 +15,7 @@
         }
     } @else {
         <div mat-subheader>
-            <button mat-stroked-button color="primary" class="chapter-button" (click)="showChapters.set(false)" tabindex="-1">
+            <button mat-stroked-button color="primary" class="chapter-button" (click)="scriptureService.showChapters.set(false)" tabindex="-1">
                 <mat-icon matPrefix>arrow_back</mat-icon>
                 {{ this.scriptureService.selectedBook?.name }}
             </button>

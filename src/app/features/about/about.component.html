@@ -16,13 +16,13 @@
                 <mat-button-toggle value="dark">Dark Theme</mat-button-toggle>
             </mat-button-toggle-group>
         </div>
-        <div class="images">
-            <img src="assets/buddy_christ_by_chrisbryer.png" alt="Not my image" />
-        </div>
         @if (showInstallButton) {
             <div class="install-pwa-button-container">
                 <button mat-stroked-button color="primary" (click)="installPwa()">Add to Desktop</button>
             </div>
         }
+        <div class="images">
+            <img src="assets/buddy_christ_by_chrisbryer.png" alt="Not my image" />
+        </div>
     </mat-card-content>
 </mat-card>

@@ -31,19 +31,10 @@
     );
 }
 
-.dark-theme .mat-mdc-button:hover,
-.dark-theme .mat-mdc-button:focus {
-    background-color: darkslategray;
-}
-
 .footer button {
     min-width: 100px;
     flex: 1 1 auto;
     height: 100%;
-}
-
-.footer button:hover {
-    background-color: #f1f1f1;
 }
 
 .toolbar-icon {

@@ -1,9 +1,35 @@
+@use '@angular/material' as mat;
+
 :host mat-card {
     margin-top: 20px;
 }
 
-.install-pwa-button-container button {
+.theme-button-toggle {
     width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.mat-button-toggle-group {
+    @include mat.button-toggle-overrides(
+        (
+            shape: 15px
+        )
+    )
+}
+
+.mat-button-toggle {
+    min-width: 10rem;
+}
+
+.install-pwa-button-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.install-pwa-button-container button {
+    min-width: 10rem;
 }
 
 .images {

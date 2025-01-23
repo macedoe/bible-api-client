@@ -25,8 +25,9 @@ html {
         (
             protected-container-color: #3d5afe,
             protected-label-text-color: white,
-            protected-container-shape: 5px,
-            protected-container-height: 42px,
+            protected-label-text-size: 1.3rem,
+            protected-container-shape: 10px,
+            protected-container-height: 48px,
         )
     );
 }
@@ -34,7 +35,8 @@ html {
 .dark-theme .mat-mdc-raised-button {
     @include mat.button-overrides(
         (
-            protected-container-color: #182465
+            protected-container-color: #182465,
+            protected-label-text-color: #e5e1e6
         )
     )
 }
@@ -42,8 +44,8 @@ html {
 .mat-mdc-outlined-button {
     @include mat.button-overrides(
         (
-            outlined-outline-color: rgba(0, 0, 0, 0.12),
-            outlined-container-shape: 5px
+            outlined-outline-color: var(--mat-sys-outline-variant),
+            outlined-container-shape: 10px
         )
     );
 }
@@ -51,12 +53,13 @@ html {
 .dark-theme .mat-mdc-outlined-button {
     @include mat.button-overrides(
         (
-            outlined-outline-color: grey,
+            outlined-outline-color: var(--mat-sys-outline-variant)
         )
     );
 }
 
-.btn-accent {
+.btn-accent,
+.dark-theme .btn-accent {
     @include mat.button-overrides(
         (
             outlined-label-text-color: #ff4081

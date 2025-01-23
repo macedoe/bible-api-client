@@ -20,7 +20,6 @@
     width: 100%;
     margin-top: 0.3rem;
     z-index: 0;
-    font-size: 1rem;
 }
 
 .search-results {
@@ -28,8 +27,20 @@
     margin-top: 1rem;
     @include mat.card-overrides(
         (
-            title-text-weight: bold,
-            subtitle-text-line-height: 3
+            title-text-weight: 900
         )
     )
+}
+
+.mat-mdc-card-header {
+    text-align: center;
+    justify-content: center;
+}
+
+.mat-mdc-card-subtitle {
+    margin: 8px 0 5px 0;
+}
+
+.mat-mdc-card-content {
+    justify-content: center;
 }

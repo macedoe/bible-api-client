@@ -1,10 +1,11 @@
+@use "@angular/material" as mat;
+
 .footer {
     position: fixed;
     bottom: 0px;
     overflow: hide;
     width: 100%;
     height: 56px;
-    border-top: 1px solid lightgrey;
 }
 
 .footer .mat-toolbar {
@@ -12,6 +13,22 @@
     flex-direction: row;
     padding: 0 5px;
     height: 100%;
+    border-top: 1px solid lightgray;
+    @include mat.toolbar-overrides(
+        (
+            container-background-color: whitesmoke,
+            container-text-color: rgba(0, 0, 0, 0.87)
+        )
+    );
+}
+
+.dark-theme .mat-toolbar {
+    border-top: grey;
+    @include mat.toolbar-overrides(
+        (
+            container-background-color: grey,
+        )
+    );
 }
 
 .footer button {
@@ -35,4 +52,8 @@
 
 .active-menu-item {
     color: #3d5afe !important;
+}
+
+.dark-theme .active-menu-item {
+    color: #d8defe !important;
 }

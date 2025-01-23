@@ -1,4 +1,4 @@
-<mat-sidenav-container fullscreen>
+<mat-sidenav-container fullscreen [class.dark-theme]="themeService.isDarkTheme">
     <mat-sidenav #sidenav role="navigation" mode="push">
         <app-sidenav (sideNavClosed)="sidenav.close()"></app-sidenav>
     </mat-sidenav>

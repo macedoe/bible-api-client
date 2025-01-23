@@ -1,6 +1,4 @@
-:host {
-    height: 100vh;
-}
+@use "@angular/material" as mat;
 
 .search-form {
     display: flex;
@@ -15,37 +13,23 @@
 
 .search-form > mat-form-field {
     width: 100%;
-    margin-top: 1rem;
+    margin-top: 0.3rem;
 }
 
 .search-form > button {
     width: 100%;
-    margin-top: 1rem;
-    height: 42px;
+    margin-top: 0.3rem;
     z-index: 0;
     font-size: 1rem;
 }
 
 .search-results {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     width: 100%;
     margin-top: 1rem;
-}
-
-.search-results h2 {
-    margin-bottom: 0;
-}
-
-.search-results-list {
-    width: 100%;
-    overflow: auto;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.search-results-list > span {
-    display: block;
-    padding: 0.8rem;
+    @include mat.card-overrides(
+        (
+            title-text-weight: bold,
+            subtitle-text-line-height: 3
+        )
+    )
 }

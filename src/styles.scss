@@ -1,24 +1,79 @@
 /* You can add global styles to this file, and also import other style files */
 
-@use '@angular/material' as mat;
-@include mat.core();
+@use "@angular/material" as mat;
 
-$myapp-theme-primary: mat.m2-define-palette(mat.$m2-indigo-palette, A400, A100, A700);
-$myapp-theme-accent: mat.m2-define-palette(mat.$m2-pink-palette, A200, A100, A400);
-$myapp-theme-warn: mat.m2-define-palette(mat.$m2-red-palette);
+html {
+    color-scheme: light;
+    @include mat.theme(
+        (
+            color: (
+                primary: mat.$blue-palette,
+                tertiary: mat.$red-palette
+            ),
+            typography: Roboto,
+            density: 0
+        )
+    );
+}
 
-$myapp-theme: mat.m2-define-light-theme((
-  color: (
-    primary: $myapp-theme-primary,
-    accent: $myapp-theme-accent,
-    warn: $myapp-theme-warn,
-  )
-));
+.dark-theme {
+    color-scheme: dark;
+}
 
-@include mat.all-component-themes($myapp-theme);
+.mat-mdc-raised-button {
+    @include mat.button-overrides(
+        (
+            protected-container-color: #3d5afe,
+            protected-label-text-color: white,
+            protected-container-shape: 5px,
+            protected-container-height: 42px,
+        )
+    );
+}
 
-@import "@angular/material/prebuilt-themes/indigo-pink.css";
-@import "@angular/material/prebuilt-themes/rose-red.css";
+.dark-theme .mat-mdc-raised-button {
+    @include mat.button-overrides(
+        (
+            protected-container-color: #182465
+        )
+    )
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.mat-mdc-outlined-button {
+    @include mat.button-overrides(
+        (
+            outlined-outline-color: rgba(0, 0, 0, 0.12),
+            outlined-container-shape: 5px
+        )
+    );
+}
+
+.dark-theme .mat-mdc-outlined-button {
+    @include mat.button-overrides(
+        (
+            outlined-outline-color: grey,
+        )
+    );
+}
+
+.btn-accent {
+    @include mat.button-overrides(
+        (
+            outlined-label-text-color: #ff4081
+        )
+    );
+}
+
+body {
+    background: var(--mat-sys-surface);
+    color: var(--mat-sys-on-surface);
+}
+
+html,
+body {
+    height: 100%;
+}
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}

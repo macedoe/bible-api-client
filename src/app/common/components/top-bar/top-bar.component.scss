@@ -1,5 +1,22 @@
+@use "@angular/material" as mat;
+
 .mat-toolbar {
     height: 56px;
+    @include mat.toolbar-overrides(
+        (
+            container-background-color: #3d5afe,
+            container-text-color: white
+        )
+    );
+}
+
+.dark-theme {
+    @include mat.toolbar-overrides(
+        (
+            container-background-color: #182465,
+            container-text-color: #d8defe
+        )
+    )
 }
 
 .spacer {

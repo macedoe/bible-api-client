@@ -1,4 +1,5 @@
 import { Component, HostListener } from '@angular/core';
+import { ThemeService } from '../../common/services/theme.service';
 import { MaterialModule } from '../../material.module';
 
 @Component({
@@ -10,6 +11,8 @@ import { MaterialModule } from '../../material.module';
 export class AboutComponent {
     deferredPrompt: any;
     showInstallButton = false;
+
+    constructor(public themeService: ThemeService) {}
 
     @HostListener('window:beforeinstallprompt', ['$event'])
     onBeforeInstallPrompt(event: Event) {

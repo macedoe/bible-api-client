@@ -21,15 +21,19 @@
         </mat-select>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit">Search</button>
+    <button mat-raised-button type="submit">Search</button>
 
     @if (homeService.chapter) {
-        <div class="search-results">
-            <h2>Search Results</h2>
-            <h3>{{ homeService.chapter.reference }}</h3>
-            <mat-list class="search-results-list">
+        <mat-card class="search-results" appearance="outlined">
+            <mat-card-header>
+                <mat-card-title>Search Results</mat-card-title>
+                <mat-card-subtitle>
+                    {{ homeService.chapter.reference }}
+                </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
                 <span [innerHtml]="homeService.resultVerse"></span>
-            </mat-list>
-        </div>
+            </mat-card-content>
+        </mat-card>
     }
 </form>

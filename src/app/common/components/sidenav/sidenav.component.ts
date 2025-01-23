@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { ScriptureService } from '../../../features/scripture/services/scripture.service';
 import { MaterialModule } from '../../../material.module';
 import { BibleChapter } from '../../interfaces';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
     selector: 'app-sidenav',
@@ -12,7 +13,10 @@ import { BibleChapter } from '../../interfaces';
 export class SidenavComponent {
     @Output() sideNavClosed = new EventEmitter();
 
-    constructor(public scriptureService: ScriptureService) {}
+    constructor(
+        public scriptureService: ScriptureService,
+        public themeService: ThemeService
+    ) {}
 
     onChapterSelected(chapter: BibleChapter) {
         this.scriptureService.onChapterSelected(chapter);

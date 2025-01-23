@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
 import { MaterialModule } from '../../../material.module';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
     selector: 'app-top-bar',
@@ -13,5 +13,5 @@ export class TopBarComponent {
 
     showBackArrow = false;
 
-    constructor(private router: Router) {}
+    constructor(public themeService: ThemeService) {}
 }

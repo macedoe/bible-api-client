@@ -4,6 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import { FooterComponent, SidenavComponent, TopBarComponent } from './common/components';
 import { SidenavService } from './common/services';
+import { ThemeService } from './common/services/theme.service';
 import { MaterialModule } from './material.module';
 
 @Component({
@@ -18,7 +19,8 @@ export class AppComponent implements OnInit {
 
     constructor(
         private sidenavService: SidenavService,
-        private swUpdate: SwUpdate
+        private swUpdate: SwUpdate,
+        public themeService: ThemeService
     ) {}
 
     ngOnInit() {
@@ -36,5 +38,7 @@ export class AppComponent implements OnInit {
                 }
             });
         }
+
+        this.themeService.loadTheme();
     }
 }

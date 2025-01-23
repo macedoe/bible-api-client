@@ -1,11 +1,10 @@
-<mat-list>
+<mat-list [class.dark-theme]="themeService.isDarkTheme">
     @if (!scriptureService.showChapters()) {
         <div mat-subheader><h3>Books</h3></div>
         @for (book of scriptureService.selectedBooks; track book.id) {
             <mat-list-item>
                 <button
                     mat-stroked-button
-                    color="primary"
                     [class.active-book]="book.id === scriptureService.selectedBook?.id"
                     (click)="scriptureService.onBookSelected(book)"
                     tabindex="-1">
@@ -24,7 +23,7 @@
             <mat-list-item>
                 <button
                     mat-stroked-button
-                    color="accent"
+                    class="btn-accent"
                     [class.active-chapter]="
                         chapter.book_id === scriptureService.selectedBook?.id && chapter.chapter === scriptureService.selectedChapter?.chapter
                     "

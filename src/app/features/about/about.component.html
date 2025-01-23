@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card appearance="outlined">
     <mat-card-header>
         <mat-card-title>About</mat-card-title>
     </mat-card-header>
@@ -10,6 +10,10 @@
             <a href="https://bible-api.com/" target="_blank">bible-api.com</a>
             for the backend service.
         </p>
+        <mat-button-toggle-group [(value)]="themeService.theme" #themeToggle="matButtonToggleGroup" (change)="themeService.toggleTheme(themeToggle.value)">
+            <mat-button-toggle value="light">Light Theme</mat-button-toggle>
+            <mat-button-toggle value="dark">Dark Theme</mat-button-toggle>
+        </mat-button-toggle-group>
         <div class="images">
             <img src="assets/buddy_christ_by_chrisbryer.png" alt="Not my image" />
         </div>

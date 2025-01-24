@@ -37,32 +37,40 @@ export class ScriptureService {
 
     public async getTranslations() {
         this.bibleTranslations = await this.bibleApiService.getCachedTranslations();
-
-        let webTranslation: BibleTranslation | null = null;
-
-        const translationCookie = localStorage.getItem(BIBLE_TRANSLATION_STORAGE);
-        if (translationCookie) {
-            webTranslation = JSON.parse(translationCookie) as BibleTranslation;
+        if (this.bibleTranslations.length === 0) {
+            console.error('No Bible translations found.');
+            return;
         }
 
-        if (!webTranslation) {
-            webTranslation = this.bibleTranslations.find(translation => translation.identifier === 'web') || null;
+        let cachedTranslation: BibleTranslation | null = null;
+
+        const storedTranslation = localStorage.getItem(BIBLE_TRANSLATION_STORAGE);
+        if (storedTranslation) {
+            cachedTranslation = JSON.parse(storedTranslation) as BibleTranslation;
+        } else {
+            cachedTranslation = this.bibleTranslations.find(translation => translation.identifier === 'web') || null;
         }
 
-        if (webTranslation) {
-            this.selectForm.get('translation')?.setValue(webTranslation.identifier);
-            const translation = await this.bibleApiService.getCachedTranslation(webTranslation.identifier);
-            this.selectedBooks = translation.books;
+        if (!cachedTranslation) {
+            console.error('No Bible translation found.');
+            return;
         }
 
-        const bookCookie = localStorage.getItem(BIBLE_BOOK_STORAGE);
-        if (bookCookie) {
-            await this.onBookSelected(JSON.parse(bookCookie) as BibleBook);
+        this.selectForm.get('translation')?.setValue(cachedTranslation.identifier);
+        const translation = await this.bibleApiService.getCachedTranslation(cachedTranslation.identifier);
+        this.selectedBooks = translation.books;
+
+        const storedBook = localStorage.getItem(BIBLE_BOOK_STORAGE);
+        if (storedBook) {
+            this.showChapters.set(true);
+            this.selectedBook = JSON.parse(storedBook) as BibleBook;
+            await this.getCachedBookChapters(cachedTranslation.identifier, this.selectedBook.id);
         }
 
-        const chapterCookie = localStorage.getItem(BIBLE_CHAPTER_STORAGE);
-        if (chapterCookie) {
-            await this.onChapterSelected(JSON.parse(chapterCookie) as BibleChapter);
+        const storedChapter = localStorage.getItem(BIBLE_CHAPTER_STORAGE);
+        if (storedChapter) {
+            this.selectedChapter = JSON.parse(storedChapter) as BibleChapter;
+            await this.getCachedChapterVerses(cachedTranslation.identifier, JSON.parse(storedChapter) as BibleChapter);
         }
     }
 
@@ -92,9 +100,13 @@ export class ScriptureService {
         }
 
         if (this.selectedTranslation) {
-            const chapters = await this.bibleApiService.getCachedBookChapters(this.selectedTranslation, book.id);
-            this.selectedBookChapters = chapters.chapters;
+            await this.getCachedBookChapters(this.selectedTranslation, book.id);
         }
+    }
+
+    private async getCachedBookChapters(selectedTranslation: string, bookId: string) {
+        const chapters = await this.bibleApiService.getCachedBookChapters(selectedTranslation, bookId);
+        this.selectedBookChapters = chapters.chapters;
     }
 
     public async onChapterSelected(chapter: BibleChapter) {
@@ -104,20 +116,24 @@ export class ScriptureService {
 
         const selectedTranslation = this.selectForm.get('translation')?.value as string | null;
         if (selectedTranslation) {
-            const verses = await this.bibleApiService.getCachedChapterVerses(selectedTranslation, chapter.book_id, chapter.chapter);
-            this.selectedChapterVerses = verses.verses;
-
-            let chapterVerse = '';
-            for (const verse of this.selectedChapterVerses) {
-                if (chapterVerse.length > 0) {
-                    chapterVerse += '<br /><br />';
-                }
-                chapterVerse += `<sup><b>${verse.verse}</b></sup> ${verse.text} `;
-            }
-
-            this.bookChapterString = `${this.selectedBook?.name} ${chapter.chapter}`;
-            this.chapterVerseString = chapterVerse;
+            await this.getCachedChapterVerses(selectedTranslation, chapter);
         }
+    }
+
+    private async getCachedChapterVerses(selectedTranslation: string, chapter: BibleChapter) {
+        const verses = await this.bibleApiService.getCachedChapterVerses(selectedTranslation, chapter.book_id, chapter.chapter);
+        this.selectedChapterVerses = verses.verses;
+
+        let chapterVerse = '';
+        for (const verse of this.selectedChapterVerses) {
+            if (chapterVerse.length > 0) {
+                chapterVerse += '<br /><br />';
+            }
+            chapterVerse += `<sup><b>${verse.verse}</b></sup> ${verse.text} `;
+        }
+
+        this.bookChapterString = `${this.selectedBook?.name} ${chapter.chapter}`;
+        this.chapterVerseString = chapterVerse;
     }
 
     public async onPreviousChapterSelected(chapter: BibleChapter) {

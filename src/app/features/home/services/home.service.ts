@@ -42,7 +42,8 @@ export class HomeService {
     }
 
     public async loadTranslations() {
-        this.bibleTranslations.set(await this.bibleApiService.getCachedTranslations());
+        const translationsResponse = await lastValueFrom(this.bibleApiService.getTranslationHeaders());
+        this.bibleTranslations.set(translationsResponse.translations);
     }
 
     private loadDefaultTranslation() {

@@ -1,6 +1,6 @@
 {
   "name": "bible-api-client",
-  "version": "1.0.1-26",
+  "version": "1.0.1-27",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { lastValueFrom } from 'rxjs';
 import { BIBLE_BOOK_STORAGE, BIBLE_CHAPTER_STORAGE, BIBLE_TRANSLATION_STORAGE } from '../../../common/constants';
 import { BibleBook, BibleChapter, BibleTranslation, BibleVerse } from '../../../common/interfaces';
 import { BibleApiService } from '../../../common/services';
@@ -10,8 +11,8 @@ import { BibleApiService } from '../../../common/services';
 export class ScriptureService {
     bibleTranslations: BibleTranslation[] = [];
     selectForm: FormGroup;
-    selectedBooks: BibleBook[] | null = null;
 
+    selectedBooks: BibleBook[] | null = null;
     selectedBook: BibleBook | null = null;
     selectedBookChapters: BibleChapter[] | null = null;
     selectedChapter: BibleChapter | null = null;
@@ -64,7 +65,7 @@ export class ScriptureService {
         }
 
         this.selectForm.get('translation')?.setValue(cachedTranslation.identifier);
-        const translation = await this.bibleApiService.getCachedTranslation(cachedTranslation.identifier);
+        const translation = await lastValueFrom(this.bibleApiService.getTranslation(cachedTranslation.identifier));
         this.selectedBooks = translation.books;
 
         const storedBook = localStorage.getItem(BIBLE_BOOK_STORAGE);
@@ -84,12 +85,13 @@ export class ScriptureService {
     }
 
     public async getTranslations() {
-        this.bibleTranslations = await this.bibleApiService.getCachedTranslations();
+        const translationsResponse = await lastValueFrom(this.bibleApiService.getTranslationHeaders());
+        this.bibleTranslations = translationsResponse.translations;
     }
 
     public async onTranslationChange() {
         if (this.selectedTranslation) {
-            const translation = await this.bibleApiService.getCachedTranslation(this.selectedTranslation);
+            const translation = await lastValueFrom(this.bibleApiService.getTranslation(this.selectedTranslation));
 
             localStorage.setItem(BIBLE_TRANSLATION_STORAGE, JSON.stringify(translation.translation));
 
@@ -118,7 +120,7 @@ export class ScriptureService {
     }
 
     private async getCachedBookChapters(selectedTranslation: string, bookId: string) {
-        const chapters = await this.bibleApiService.getCachedBookChapters(selectedTranslation, bookId);
+        const chapters = await lastValueFrom(this.bibleApiService.getBookChapters(selectedTranslation, bookId));
         this.selectedBookChapters = chapters.chapters;
     }
 
@@ -134,7 +136,7 @@ export class ScriptureService {
     }
 
     private async getCachedChapterVerses(selectedTranslation: string, chapter: BibleChapter) {
-        const verses = await this.bibleApiService.getCachedChapterVerses(selectedTranslation, chapter.book_id, chapter.chapter);
+        const verses = await lastValueFrom(this.bibleApiService.getChapterVerses(selectedTranslation, chapter.book_id, chapter.chapter));
         this.selectedChapterVerses = verses.verses;
 
         let chapterVerse = '';

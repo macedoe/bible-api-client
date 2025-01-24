@@ -17,6 +17,9 @@ export class ConfigService {
         }
     };
 
+    deferredPrompt: any;
+    showInstallButton = false;
+
     constructor(private http: HttpClient) {}
 
     async loadConfig(): Promise<void> {

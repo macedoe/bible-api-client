@@ -25,7 +25,7 @@
     </mat-card-content>
 </mat-card>
 
-@if (showInstallButton) {
+@if (configService.showInstallButton) {
     <div class="install-pwa-button-container">
         <button mat-stroked-button color="primary" (click)="installPwa()">Add to Desktop</button>
     </div>

@@ -1,9 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { RouterOutlet } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import { FooterComponent, SidenavComponent, TopBarComponent } from './common/components';
-import { SidenavService } from './common/services';
+import { ConfigService, SidenavService } from './common/services';
 import { ThemeService } from './common/services/theme.service';
 import { MaterialModule } from './material.module';
 
@@ -20,6 +20,8 @@ export class AppComponent implements OnInit {
     constructor(
         private sidenavService: SidenavService,
         private swUpdate: SwUpdate,
+        private configService: ConfigService,
+        private cdr: ChangeDetectorRef,
         public themeService: ThemeService
     ) {}
 
@@ -40,5 +42,13 @@ export class AppComponent implements OnInit {
         }
 
         this.themeService.loadTheme();
+    }
+
+    @HostListener('window:beforeinstallprompt', ['$event'])
+    onBeforeInstallPrompt(event: Event) {
+        event.preventDefault();
+        this.configService.deferredPrompt = event;
+        this.configService.showInstallButton = true;
+        this.cdr.detectChanges();
     }
 }

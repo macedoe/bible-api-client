@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../material.module';
 import { HomeService } from './services/home.service';
@@ -10,10 +10,8 @@ import { HomeService } from './services/home.service';
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss'
 })
-export class HomeComponent implements OnInit {
-    constructor(public homeService: HomeService) {}
-
-    async ngOnInit() {
-        await this.homeService.initialize();
+export class HomeComponent {
+    constructor(public homeService: HomeService) {
+        this.homeService.initialize();
     }
 }

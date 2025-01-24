@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -14,7 +14,7 @@ export class HomeService {
     searchForm: FormGroup;
     chapter: BibleApiResponse | null = null;
     resultVerse: SafeHtml | null = null;
-    bibleTranslations: BibleTranslation[] = [];
+    bibleTranslations = signal<BibleTranslation[]>([]);
     initialized = false;
 
     constructor(
@@ -42,11 +42,11 @@ export class HomeService {
     }
 
     public async loadTranslations() {
-        this.bibleTranslations = await this.bibleApiService.getCachedTranslations();
+        this.bibleTranslations.set(await this.bibleApiService.getCachedTranslations());
     }
 
     private loadDefaultTranslation() {
-        const webTranslation = this.bibleTranslations.find(translation => translation.identifier === 'web') || null;
+        const webTranslation = this.bibleTranslations().find(translation => translation.identifier === 'web') || null;
         if (webTranslation) {
             this.searchForm.get('translation')?.setValue(webTranslation.identifier);
         }

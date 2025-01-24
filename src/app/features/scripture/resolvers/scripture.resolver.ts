@@ -4,8 +4,8 @@ import { ScriptureService } from '../services/scripture.service';
 
 export const scriptureResolver: ResolveFn<boolean> = async () => {
     const scriptureService = inject(ScriptureService);
-    await scriptureService.getTranslations();
-    if (scriptureService.bibleTranslations.length > 0) {
+    await scriptureService.initialize();
+    if (scriptureService.initialized) {
         return true;
     } else {
         return false;

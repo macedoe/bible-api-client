@@ -22,8 +22,6 @@ export class ScriptureComponent implements OnInit {
     }
 
     async ngOnInit() {
-        if (!this.scriptureService.bibleTranslations.length) {
-            await this.scriptureService.getTranslations();
-        }
+        await this.scriptureService.initialize();
     }
 }

@@ -22,6 +22,8 @@ export class ScriptureService {
 
     public showChapters = signal(false);
 
+    initialized = false;
+
     constructor(
         formBuilder: FormBuilder,
         private bibleApiService: BibleApiService
@@ -35,8 +37,13 @@ export class ScriptureService {
         return this.selectForm.get('translation')?.value as string | null;
     }
 
-    public async getTranslations() {
-        this.bibleTranslations = await this.bibleApiService.getCachedTranslations();
+    public async initialize() {
+        if (this.initialized) {
+            return;
+        }
+
+        await this.getTranslations();
+
         if (this.bibleTranslations.length === 0) {
             console.error('No Bible translations found.');
             return;
@@ -72,6 +79,12 @@ export class ScriptureService {
             this.selectedChapter = JSON.parse(storedChapter) as BibleChapter;
             await this.getCachedChapterVerses(cachedTranslation.identifier, JSON.parse(storedChapter) as BibleChapter);
         }
+
+        this.initialized = true;
+    }
+
+    public async getTranslations() {
+        this.bibleTranslations = await this.bibleApiService.getCachedTranslations();
     }
 
     public async onTranslationChange() {

@@ -24,10 +24,10 @@ export class AppDb extends Dexie {
             apiResponses: '++itmId, reference, translation_id',
             storedBooks: '++itmId, id',
             selectedBook: 'id',
-            storedChapters: '++itmId, book_id, chapter',
+            storedChapters: '++itmId, book_id',
             selectedChapter: 'book_id, chapter',
-            storedVerses: '++itmId, book_id, chapter, verse',
-            selectedVerses: 'book_id, chapter, verse'
+            storedVerses: '++itmId, book_id, chapter',
+            selectedVerses: 'book_id, chapter'
         });
     }
 }

@@ -3,7 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { lastValueFrom } from 'rxjs';
-import { HOME_CHAPTER_STORAGE, HOME_TRANSLATION_STORAGE, HOME_VERSE_STORAGE, TRANSLATION_LIST_STORAGE } from '../../../common/constants';
+import { DEFAULT_TRANSLATION } from '../../../common/constants';
+import { localBibleDb } from '../../../common/data';
 import { BibleApiResponse, BibleTranslation } from '../../../common/interfaces';
 import { BibleApiService } from '../../../common/services';
 import { searchTermValidator } from '../validators/search-term.validator';
@@ -29,66 +30,78 @@ export class HomeService {
         });
     }
 
+    private get selectedTranslation(): string | null {
+        return this.searchForm.get('translation')?.value as string | null;
+    }
+
     public async initialize() {
         if (!this.initialized) {
             this.initialized = true;
 
             await this.loadTranslations();
-            this.loadDefaultTranslation();
-
-            this.loadTranslationFromStorage();
-            this.loadVerseFromStorage();
-            this.loadChapterFromStorage();
+            await this.loadTranslationFromStorage();
+            await this.loadVerseFromStorage();
         }
     }
 
     public async loadTranslations() {
-        const storedTranslations = localStorage.getItem(TRANSLATION_LIST_STORAGE);
-        if (storedTranslations) {
-            this.bibleTranslations.set(JSON.parse(storedTranslations) as BibleTranslation[]);
+        const storedTranslations = await localBibleDb.translations.toArray();
+
+        if (storedTranslations.length > 0) {
+            this.bibleTranslations.set(storedTranslations);
         } else {
             const translationsResponse = await lastValueFrom(this.bibleApiService.getTranslationHeaders());
             this.bibleTranslations.set(translationsResponse);
-            localStorage.setItem(TRANSLATION_LIST_STORAGE, JSON.stringify(translationsResponse));
+            await localBibleDb.translations.bulkAdd(translationsResponse);
+        }
+    }
+
+    private async loadTranslationFromStorage() {
+        const storedTranslation = (await localBibleDb.defaultTranslations.get('home')) || null;
+        if (storedTranslation) {
+            this.searchForm.get('translation')?.setValue(storedTranslation.identifier);
+        } else {
+            this.loadDefaultTranslation();
         }
     }
 
     private loadDefaultTranslation() {
-        const webTranslation = this.bibleTranslations().find(translation => translation.identifier === 'web') || null;
+        const webTranslation = this.bibleTranslations().find(translation => translation.identifier === DEFAULT_TRANSLATION) || null;
         if (webTranslation) {
             this.searchForm.get('translation')?.setValue(webTranslation.identifier);
         }
     }
 
-    private loadTranslationFromStorage() {
-        const storedTranslationId = localStorage.getItem(HOME_TRANSLATION_STORAGE);
-        if (storedTranslationId) {
-            this.searchForm.get('translation')?.setValue(storedTranslationId);
-        }
-    }
-
-    private loadVerseFromStorage() {
-        const storedSearch = localStorage.getItem(HOME_VERSE_STORAGE);
-        if (storedSearch) {
+    private async loadVerseFromStorage() {
+        const storedSearch = localStorage.getItem('ls-home-search-input-string');
+        if (storedSearch && this.selectedTranslation) {
             this.searchForm.get('searchInput')?.setValue(storedSearch);
+
+            await this.loadChapterFromStorage(this.selectedTranslation, storedSearch);
         }
     }
 
-    private loadChapterFromStorage() {
-        const storedChapter = localStorage.getItem(HOME_CHAPTER_STORAGE);
-        if (storedChapter) {
-            this.setChapterAndVerses(JSON.parse(storedChapter) as BibleApiResponse);
+    private async loadChapterFromStorage(translation_id: string, searchInput: string) {
+        const storedChapter =
+            (await localBibleDb.apiResponses
+                .where('reference')
+                .equals(searchInput)
+                .and(response => response.translation_id === translation_id)
+                .toArray()) || null;
+
+        if (storedChapter.length > 0) {
+            await this.setChapterAndVerses(storedChapter[0]);
         }
     }
 
     public async onTranslationSelected(event: MatSelectChange) {
         const selectedTranslation = event.value as string;
-        this.storeTranslation(selectedTranslation);
+        await this.storeTranslation(selectedTranslation);
         await this.search();
     }
 
-    private storeTranslation(translationId: string) {
-        localStorage.setItem(HOME_TRANSLATION_STORAGE, translationId);
+    private async storeTranslation(translationId: string) {
+        await localBibleDb.defaultTranslations.put({ view: 'home', identifier: translationId });
     }
 
     public clearSearch() {
@@ -107,8 +120,17 @@ export class HomeService {
         const queryString = `${searchInput}?translation=${translationId}`;
 
         try {
-            const chapterData = await lastValueFrom(this.bibleApiService.get<BibleApiResponse>(queryString));
-            this.setChapterAndVerses(chapterData);
+            let chapterData = await localBibleDb.apiResponses
+                .where('reference')
+                .equals(searchInput)
+                .and(response => response.translation_id === translationId)
+                .first();
+
+            if (!chapterData) {
+                chapterData = await lastValueFrom(this.bibleApiService.get<BibleApiResponse>(queryString));
+            }
+
+            await this.setChapterAndVerses(chapterData);
             this.storeSearch(searchInput);
         } catch (error) {
             this.chapter = null;
@@ -119,10 +141,10 @@ export class HomeService {
     }
 
     private storeSearch(searchInput: string) {
-        localStorage.setItem(HOME_VERSE_STORAGE, searchInput);
+        localStorage.setItem('ls-home-search-input-string', searchInput);
     }
 
-    private setChapterAndVerses(chapterData: BibleApiResponse) {
+    private async setChapterAndVerses(chapterData: BibleApiResponse) {
         let verses = '';
         for (const verse of chapterData.verses) {
             if (verses.length > 0) {
@@ -134,6 +156,9 @@ export class HomeService {
         this.chapter = chapterData;
         this.resultVerse = this.domSanitizer.bypassSecurityTrustHtml(verses);
 
-        localStorage.setItem(HOME_CHAPTER_STORAGE, JSON.stringify(chapterData));
+        const existingChapter = await localBibleDb.apiResponses.where('reference').equals(chapterData.reference).toArray();
+        if (existingChapter.filter(chapter => chapter.translation_id === this.selectedTranslation).length === 0) {
+            await localBibleDb.apiResponses.put(chapterData);
+        }
     }
 }

@@ -32,7 +32,7 @@ export class BibleApiService {
     getTranslationHeaders() {
         return this.get<{ translations: BibleTranslation[] }>('data').pipe(
             map(response => {
-                return response.translations.filter(translation => translation.language_code === 'eng');
+                return response.translations.filter(translation => translation.language_code === 'eng' && translation.identifier !== 'ylt');
             })
         );
     }

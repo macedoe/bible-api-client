@@ -20,7 +20,7 @@ export class AppDb extends Dexie {
 
         this.version(1).stores({
             translations: '++itmId, identifier',
-            defaultTranslations: '++itmId, view',
+            defaultTranslations: 'view',
             apiResponses: '++itmId, reference, translation_id',
             storedBooks: '++itmId, id',
             selectedBook: 'id',

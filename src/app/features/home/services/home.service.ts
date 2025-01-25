@@ -82,14 +82,9 @@ export class HomeService {
     }
 
     private async loadChapterFromStorage(translation_id: string, searchInput: string) {
-        const storedChapter =
-            (await localBibleDb.apiResponses
-                .where('reference')
-                .equals(searchInput)
-                .and(response => response.translation_id === translation_id)
-                .toArray()) || null;
+        const storedChapter = (await localBibleDb.apiResponses.where('reference').equals(searchInput).toArray()) || null;
 
-        if (storedChapter.length > 0) {
+        if (storedChapter.filter(response => response.translation_id === translation_id).length > 0) {
             await this.setChapterAndVerses(storedChapter[0]);
         }
     }

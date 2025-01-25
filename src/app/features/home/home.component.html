@@ -21,7 +21,7 @@
         </mat-select>
     </mat-form-field>
 
-    <button mat-raised-button type="submit">Search</button>
+    <button mat-raised-button type="submit" [disabled]="!homeService.searchForm.valid">Search</button>
 
     @if (homeService.chapter) {
         <mat-card class="search-results" appearance="outlined">

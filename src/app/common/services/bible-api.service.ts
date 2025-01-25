@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { map } from 'rxjs';
 import { BibleBook, BibleChapter, BibleTranslation, BibleVerse } from '../interfaces';
 import { ConfigService } from './config.service';
 
@@ -29,7 +30,11 @@ export class BibleApiService {
     }
 
     getTranslationHeaders() {
-        return this.get<{ translations: BibleTranslation[] }>('data');
+        return this.get<{ translations: BibleTranslation[] }>('data').pipe(
+            map(response => {
+                return response.translations.filter(translation => translation.language_code === 'eng');
+            })
+        );
     }
 
     get<T>(queryString: string) {

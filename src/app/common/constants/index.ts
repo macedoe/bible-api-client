@@ -7,3 +7,7 @@ export * from './default-theme';
 export * from './home-chapter-storage';
 export * from './home-translation-storage';
 export * from './home-verse-storage';
+export * from './translation-books-storage';
+export * from './translation-chapters-storage';
+export * from './translation-list-storage';
+export * from './translation-verses-storage';

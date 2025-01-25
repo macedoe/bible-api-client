@@ -3,9 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { lastValueFrom } from 'rxjs';
-import { HOME_CHAPTER_STORAGE, HOME_TRANSLATION_STORAGE, HOME_VERSE_STORAGE } from '../../../common/constants';
+import { HOME_CHAPTER_STORAGE, HOME_TRANSLATION_STORAGE, HOME_VERSE_STORAGE, TRANSLATION_LIST_STORAGE } from '../../../common/constants';
 import { BibleApiResponse, BibleTranslation } from '../../../common/interfaces';
 import { BibleApiService } from '../../../common/services';
+import { searchTermValidator } from '../validators/search-term.validator';
 
 @Injectable({
     providedIn: 'root'
@@ -23,7 +24,7 @@ export class HomeService {
         private domSanitizer: DomSanitizer
     ) {
         this.searchForm = formBuilder.group({
-            searchInput: [''],
+            searchInput: ['', [Validators.required, searchTermValidator()]],
             translation: ['', Validators.required]
         });
     }
@@ -42,8 +43,14 @@ export class HomeService {
     }
 
     public async loadTranslations() {
-        const translationsResponse = await lastValueFrom(this.bibleApiService.getTranslationHeaders());
-        this.bibleTranslations.set(translationsResponse.translations);
+        const storedTranslations = localStorage.getItem(TRANSLATION_LIST_STORAGE);
+        if (storedTranslations) {
+            this.bibleTranslations.set(JSON.parse(storedTranslations) as BibleTranslation[]);
+        } else {
+            const translationsResponse = await lastValueFrom(this.bibleApiService.getTranslationHeaders());
+            this.bibleTranslations.set(translationsResponse);
+            localStorage.setItem(TRANSLATION_LIST_STORAGE, JSON.stringify(translationsResponse));
+        }
     }
 
     private loadDefaultTranslation() {

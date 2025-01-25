@@ -179,16 +179,22 @@ export class ScriptureService {
         await localBibleDb.selectedChapter.clear();
         await localBibleDb.selectedChapter.put(chapter);
 
-        const selectedTranslation = this.selectForm.get('translation')?.value as string | null;
-        if (selectedTranslation) {
-            await this.getChapterVerses(selectedTranslation, chapter);
+        if (this.selectedTranslation) {
+            await this.getChapterVerses(this.selectedTranslation, chapter);
         }
     }
 
     private async getChapterVerses(selectedTranslation: string, chapter: BibleChapter) {
-        const verses = await lastValueFrom(this.bibleApiService.getChapterVerses(selectedTranslation, chapter.book_id, chapter.chapter));
-        this.selectedChapterVerses = verses.verses;
-        this.setChapterVerseString(chapter, verses.verses);
+        let verses = await localBibleDb.storedVerses.where('book_id').equals(chapter.book_id).toArray();
+        if (verses.filter(verse => verse.chapter === chapter.chapter).length > 0) {
+            this.selectedChapterVerses = verses;
+        } else {
+            const versesResponse = await lastValueFrom(this.bibleApiService.getChapterVerses(selectedTranslation, chapter.book_id, chapter.chapter));
+            this.selectedChapterVerses = versesResponse.verses;
+            await localBibleDb.storedVerses.bulkAdd(this.selectedChapterVerses);
+        }
+
+        this.setChapterVerseString(chapter, this.selectedChapterVerses);
     }
 
     private setChapterVerseString(chapter: BibleChapter, verses: BibleVerse[]) {

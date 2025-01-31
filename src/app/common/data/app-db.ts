@@ -13,12 +13,11 @@ export class AppDb extends Dexie {
     selectedChapter!: Table<BibleChapter, string>;
 
     storedVerses!: Table<BibleVerse, string>;
-    selectedVerses!: Table<BibleVerse, string>;
 
     constructor() {
         super('BibleAppDb');
 
-        this.version(1).stores({
+        this.version(2).stores({
             translations: '++itmId, identifier',
             defaultTranslations: 'view',
             apiResponses: '++itmId, reference, translation_id',
@@ -26,8 +25,7 @@ export class AppDb extends Dexie {
             selectedBook: 'id',
             storedChapters: '++itmId, book_id',
             selectedChapter: 'book_id, chapter',
-            storedVerses: '++itmId, book_id, chapter',
-            selectedVerses: 'book_id, chapter'
+            storedVerses: '++itmId, book_id, chapter'
         });
     }
 }

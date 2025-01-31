@@ -121,8 +121,10 @@ export class ScriptureService {
             return;
         }
 
-        const storedVerses = await localBibleDb.storedVerses.where('book_id').equals(this.selectedBook!.id).toArray();
-        if (storedVerses.filter(verse => verse.chapter === this.selectedChapter!.chapter).length > 0) {
+        const storedVerses = await localBibleDb.storedVerses
+            .filter(verse => verse.book_id === this.selectedChapter!.book_id && verse.chapter === this.selectedChapter!.chapter)
+            .toArray();
+        if (storedVerses.length > 0) {
             this.selectedChapterVerses = storedVerses;
             this.setChapterVerseString(this.selectedChapter!, this.selectedChapterVerses!);
         } else {
@@ -185,14 +187,10 @@ export class ScriptureService {
     }
 
     private async getChapterVerses(selectedTranslation: string, chapter: BibleChapter) {
-        let verses = await localBibleDb.storedVerses.where('book_id').equals(chapter.book_id).toArray();
-        if (verses.filter(verse => verse.chapter === chapter.chapter).length > 0) {
-            this.selectedChapterVerses = verses;
-        } else {
-            const versesResponse = await lastValueFrom(this.bibleApiService.getChapterVerses(selectedTranslation, chapter.book_id, chapter.chapter));
-            this.selectedChapterVerses = versesResponse.verses;
-            await localBibleDb.storedVerses.bulkAdd(this.selectedChapterVerses);
-        }
+        const versesResponse = await lastValueFrom(this.bibleApiService.getChapterVerses(selectedTranslation, chapter.book_id, chapter.chapter));
+        this.selectedChapterVerses = versesResponse.verses;
+        await localBibleDb.storedVerses.clear();
+        await localBibleDb.storedVerses.bulkAdd(this.selectedChapterVerses);
 
         this.setChapterVerseString(chapter, this.selectedChapterVerses);
     }

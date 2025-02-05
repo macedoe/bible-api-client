@@ -1,6 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { lastValueFrom } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { Config } from '../interfaces';
 
 @Injectable({
@@ -20,12 +19,8 @@ export class ConfigService {
     deferredPrompt: any;
     showInstallButton = false;
 
-    constructor(private http: HttpClient) {}
-
     async loadConfig(): Promise<void> {
-        const response = await lastValueFrom(this.http.get<Config>('/config.json'));
-
-        let url = response.api.baseUrl;
+        let url = environment.api.baseUrl;
 
         if (url && !url.endsWith('/')) {
             url += '/';
@@ -36,8 +31,8 @@ export class ConfigService {
                 baseUrl: url
             },
             settings: {
-                idleTimeOutSeconds: Number(response.settings.idleTimeOutSeconds),
-                alertTimeOutSeconds: Number(response.settings.alertTimeOutSeconds)
+                idleTimeOutSeconds: Number(environment.settings.idleTimeoutSeconds),
+                alertTimeOutSeconds: Number(environment.settings.alertTimeoutSeconds)
             }
         };
     }

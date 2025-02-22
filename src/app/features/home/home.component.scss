@@ -2,13 +2,21 @@
 
 .search-form {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
+    justify-items: center;
+    vertical-align: middle;
     width: 100%;
+    flex-wrap: wrap;
+    column-gap: 20px;
 }
 
-.search-form > * {
-    flex: 1 1 auto;
+.search-form-input {
+    flex: 1 1 200px;
+}
+
+.search-form-select {
+    flex: 1 1 250px;
 }
 
 .search-form > mat-form-field {
@@ -20,6 +28,7 @@
     width: 100%;
     margin-top: 0.3rem;
     z-index: 0;
+    flex: 1 1 200px;
 }
 
 .search-results {

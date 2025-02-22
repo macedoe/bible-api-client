@@ -19,7 +19,7 @@
                 {{ this.scriptureService.selectedBook?.name }}
             </button>
         </div>
-        @for (chapter of scriptureService.selectedBookChapters; track chapter.book_id) {
+        @for (chapter of scriptureService.selectedBookChapters; track chapter.chapter) {
             <mat-list-item>
                 <button
                     mat-stroked-button

@@ -138,6 +138,7 @@ export class ScriptureService {
     public async onTranslationChange() {
         if (this.selectedTranslation) {
             await localBibleDb.defaultTranslations.put({ view: 'scripture', identifier: this.selectedTranslation });
+            await this.loadTranslationBooksFromCache(this.selectedTranslation);
         }
 
         if (this.selectedTranslation && this.selectedChapter) {

@@ -24,7 +24,7 @@
     <button mat-raised-button type="submit" [disabled]="!homeService.searchForm.valid">Search</button>
 
     @if (homeService.chapter) {
-        <mat-card class="search-results" appearance="outlined">
+        <mat-card class="search-results clickable-card" appearance="outlined" [matMenuTriggerFor]="contextMenu">
             <mat-card-header>
                 <mat-card-title>Search Results</mat-card-title>
                 <mat-card-subtitle>
@@ -37,3 +37,10 @@
         </mat-card>
     }
 </form>
+
+<mat-menu #contextMenu="matMenu" xPosition="before" yPosition="above">
+    <button mat-menu-item (click)="homeService.onShare()">
+        <mat-icon>share</mat-icon>
+        <span>Share</span>
+    </button>
+</mat-menu>

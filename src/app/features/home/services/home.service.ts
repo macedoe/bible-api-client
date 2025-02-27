@@ -1,11 +1,13 @@
+import { Clipboard } from '@angular/cdk/clipboard';
 import { Injectable, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { lastValueFrom } from 'rxjs';
 import { DEFAULT_TRANSLATION } from '../../../common/constants';
 import { localBibleDb } from '../../../common/data';
-import { BibleApiResponse, BibleTranslation } from '../../../common/interfaces';
+import { BibleApiResponse, BibleApiVerse, BibleTranslation } from '../../../common/interfaces';
 import { BibleApiService } from '../../../common/services';
 import { searchTermValidator } from '../validators/search-term.validator';
 
@@ -22,7 +24,9 @@ export class HomeService {
     constructor(
         formBuilder: FormBuilder,
         private bibleApiService: BibleApiService,
-        private domSanitizer: DomSanitizer
+        private domSanitizer: DomSanitizer,
+        private clipboard: Clipboard,
+        private snackBar: MatSnackBar
     ) {
         this.searchForm = formBuilder.group({
             searchInput: ['', [Validators.required, searchTermValidator()]],
@@ -135,18 +139,33 @@ export class HomeService {
         }
     }
 
+    async onShare() {
+        if (this.chapter) {
+            let verses = '';
+            for (const bibleVerse of this.chapter.verses) {
+                if (verses.length > 0) {
+                    verses += '\n\n';
+                }
+                verses += `${bibleVerse.verse} ${bibleVerse.text} `;
+            }
+
+            const shareText = `${this.chapter.reference}\n\n${verses}`;
+
+            if (navigator.share) {
+                await navigator.share({ title: 'Bible Verse', text: shareText });
+            } else {
+                this.clipboard.copy(shareText);
+                this.snackBar.open('Verse copied to clipboard', 'Dismiss', { duration: 3000 });
+            }
+        }
+    }
+
     private storeSearch(searchInput: string) {
         localStorage.setItem('ls-home-search-input-string', searchInput);
     }
 
     private async setChapterAndVerses(chapterData: BibleApiResponse) {
-        let verses = '';
-        for (const verse of chapterData.verses) {
-            if (verses.length > 0) {
-                verses += '<br /><br />';
-            }
-            verses += `<sup><b>${verse.verse}</b></sup> ${verse.text} `;
-        }
+        const verses = this.parseChapterVerses(chapterData.verses);
 
         this.chapter = chapterData;
         this.resultVerse = this.domSanitizer.bypassSecurityTrustHtml(verses);
@@ -155,5 +174,17 @@ export class HomeService {
         if (existingChapter.filter(chapter => chapter.translation_id === this.selectedTranslation).length === 0) {
             await localBibleDb.apiResponses.put(chapterData);
         }
+    }
+
+    private parseChapterVerses(bibleVerses: BibleApiVerse[]): string {
+        let verses = '';
+        for (const bibleVerse of bibleVerses) {
+            if (verses.length > 0) {
+                verses += '<br /><br />';
+            }
+            verses += `<sup><b>${bibleVerse.verse}</b></sup> ${bibleVerse.text} `;
+        }
+
+        return verses;
     }
 }

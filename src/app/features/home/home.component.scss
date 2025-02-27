@@ -12,11 +12,11 @@
 }
 
 .search-form-input {
-    flex: 1 1 200px;
+    flex: 1 1 100%;
 }
 
 .search-form-select {
-    flex: 1 1 250px;
+    flex: 1 1 100%;
 }
 
 .search-form > mat-form-field {
@@ -52,4 +52,13 @@
 
 .mat-mdc-card-content {
     justify-content: center;
+}
+
+.clickable-card {
+    cursor: pointer;
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.clickable-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }

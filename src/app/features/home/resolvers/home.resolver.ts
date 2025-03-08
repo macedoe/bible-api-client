@@ -5,9 +5,5 @@ import { HomeService } from '../services/home.service';
 export const homeResolver: ResolveFn<boolean> = async () => {
     const homeService = inject(HomeService);
     await homeService.initialize();
-    if (homeService.initialized) {
-        return true;
-    } else {
-        return false;
-    }
+    return homeService.initialized;
 };

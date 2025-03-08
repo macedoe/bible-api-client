@@ -32,7 +32,10 @@
     {
       "name": "from-api",
       "version": 1,
-      "urls": ["https://bible-api.com/data/**"],
+      "urls": [
+        "https://bible-api.com/data/", 
+        "/config.json"
+      ],
       "cacheConfig": {
         "strategy": "performance",
         "maxSize": 9999,
